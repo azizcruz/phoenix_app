@@ -1,0 +1,42 @@
+<.header>
+  Listing Todos
+  <:actions>
+    <.link patch={~p"/todos/new"}>
+      <.button>New Todo</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<hr class="my-4" />
+<ul phx-update="stream" id="todos">
+  <li
+    :for={{dom_id, todo} <- @streams.todos}
+    id={dom_id}
+    class="flex justify-between items-center"
+  >
+    <div><%= todo.title %></div>
+    <div>
+      <.link patch={~p"/todos/#{todo}/edit"}>
+        <.button class="my-1 bg-green-400 hover:bg-green-500">Edit</.button>
+      </.link>
+      <.link
+        data-confirm="Are you sure?"
+        phx-click={JS.push("delete", value: %{id: todo.id}) |> hide("##{dom_id}")}
+      >
+        <.button class="my-1 bg-red-400 hover:bg-red-500">Delete</.button>
+      </.link>
+      <input type="checkbox" phx-click={JS.push("save", value: %{done: !todo.done})} />
+    </div>
+  </li>
+</ul>
+
+<.modal :if={@live_action in [:new, :edit]} id="todo-modal" show on_cancel={JS.patch(~p"/")}>
+  <.live_component
+    module={LiveViewTodosWeb.TodoLive.FormComponent}
+    id={@todo.id || :new}
+    title={@page_title}
+    action={@live_action}
+    todo={@todo}
+    patch={~p"/"}
+  />
+</.modal>
