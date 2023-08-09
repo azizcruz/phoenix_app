@@ -2,29 +2,29 @@ defmodule LiveViewTodosWeb.Router do
   use LiveViewTodosWeb, :router
 
   pipeline :browser do
-    plug(:accepts, ["html"])
-    plug(:fetch_session)
-    plug(:fetch_live_flash)
-    plug(:put_root_layout, html: {LiveViewTodosWeb.Layouts, :root})
-    plug(:protect_from_forgery)
-    plug(:put_secure_browser_headers)
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_live_flash
+    plug :put_root_layout, html: {LiveViewTodosWeb.Layouts, :root}
+    plug :protect_from_forgery
+    plug :put_secure_browser_headers
   end
 
   pipeline :api do
-    plug(:accepts, ["json"])
+    plug :accepts, ["json"]
   end
 
   scope "/", LiveViewTodosWeb do
-    pipe_through(:browser)
+    pipe_through :browser
 
-    live("/", HomeLive)
+    live "/", HomeLive
 
-    live("/todos", TodoLive.Index, :index)
-    live("/todos/new", TodoLive.Index, :new)
-    live("/todos/:id/edit", TodoLive.Index, :edit)
+    live "/todos", TodoLive.Index, :index
+    live "/todos/new", TodoLive.Index, :new
+    live "/todos/:id/edit", TodoLive.Index, :edit
 
-    live("/todos/:id", TodoLive.Show, :show)
-    live("/todos/:id/show/edit", TodoLive.Show, :edit)
+    live "/todos/:id", TodoLive.Show, :show
+    live "/todos/:id/show/edit", TodoLive.Show, :edit
 
     live "/tags", TagLive.Index, :index
     live "/tags/new", TagLive.Index, :new
@@ -32,12 +32,6 @@ defmodule LiveViewTodosWeb.Router do
 
     live "/tags/:id", TagLive.Show, :show
     live "/tags/:id/show/edit", TagLive.Show, :edit
-  end
-
-  scope "/admin", LiveViewTodosWeb.Admin, as: :admin do
-    pipe_through :browser
-    resources "/posts", PostController
-    resources "/tags", TagController
   end
 
   # Other scopes may use custom stacks.
@@ -51,14 +45,14 @@ defmodule LiveViewTodosWeb.Router do
     # it behind authentication and allow only admins to access it.
     # If your application does not have an admins-only section yet,
     # you can use Plug.BasicAuth to set up some basic authentication
-    # as long as you are also using SSL (which you should anyway).
+    # as long as you are also using SSL  which you should anyway.
     import Phoenix.LiveDashboard.Router
 
     scope "/dev" do
-      pipe_through(:browser)
+      pipe_through :browser
 
-      live_dashboard("/dashboard", metrics: LiveViewTodosWeb.Telemetry)
-      forward("/mailbox", Plug.Swoosh.MailboxPreview)
+      live_dashboard "/dashboard", metrics: LiveViewTodosWeb.Telemetry
+      forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
 end

@@ -136,8 +136,8 @@ defmodule LiveViewTodos.Blog do
 
   """
   def get_post!(id) do
-    Post
-    |> Repo.get!(Post, id)
+    query = from p in Post, where: p.id == ^id
+    Repo.one!(Ecto.Query.preload(query, :tags))
   end
 
   @doc """

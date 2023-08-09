@@ -5,6 +5,11 @@ defmodule LiveViewTodosWeb.HomeLive do
     {:ok, socket}
   end
 
+  def handle_params(unsigned_params, uri, socket) do
+    {:noreply, assign(socket, params: unsigned_params)}
+  end
+
+  @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
     <div>
@@ -21,7 +26,10 @@ defmodule LiveViewTodosWeb.HomeLive do
         </div>
       </div>
       <div>
-        <%= live_render(@socket, LiveViewTodosWeb.PostsLive, id: "liveposts") %>
+        <%= live_render(@socket, LiveViewTodosWeb.PostsLive,
+          id: "liveposts",
+          session: %{"params" => @params}
+        ) %>
       </div>
     </div>
     """

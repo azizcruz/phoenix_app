@@ -18,18 +18,4 @@ defmodule LiveViewTodos.TodosFixtures do
 
     todo
   end
-
-  @doc """
-  Generate a todo.
-  """
-  def todo_fixture(attrs \\ %{}) do
-    {:ok, todo} =
-      attrs
-      |> Enum.into(%{
-
-      })
-      |> LiveViewTodos.Todos.create_todo()
-
-    todo
-  end
 end

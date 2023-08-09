@@ -39,43 +39,9 @@ defmodule LiveViewTodos.BlogFixtures do
   def post_tag_fixture(attrs \\ %{}) do
     {:ok, post_tag} =
       attrs
-      |> Enum.into(%{
-
-      })
+      |> Enum.into(%{})
       |> LiveViewTodos.Blog.create_post_tag()
 
     post_tag
-  end
-
-  @doc """
-  Generate a post.
-  """
-  def post_fixture(attrs \\ %{}) do
-    {:ok, post} =
-      attrs
-      |> Enum.into(%{
-
-      })
-      |> LiveViewTodos.Blog.create_post()
-
-    post
-  end
-
-  @doc """
-  Generate a post.
-  """
-  def post_fixture(attrs \\ %{}) do
-    {:ok, post} =
-      attrs
-      |> Enum.into(%{
-        title: "some title",
-        body: "some body",
-        published_at: ~N[2023-08-04 12:44:00],
-        published: true,
-        views: 42
-      })
-      |> LiveViewTodos.Blog.create_post()
-
-    post
   end
 end
