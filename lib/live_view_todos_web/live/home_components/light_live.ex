@@ -6,6 +6,7 @@ defmodule LiveViewTodosWeb.LightLive do
   def mount(_params, _session, socket) do
     Phoenix.PubSub.subscribe(LiveViewTodos.PubSub, "light")
     socket = assign(socket, brightness: @value)
+
     {:ok, socket}
   end
 
@@ -32,6 +33,7 @@ defmodule LiveViewTodosWeb.LightLive do
     {:noreply, socket |> assign(:brightness, value)}
   end
 
+  @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~H"""
     <div id="light">

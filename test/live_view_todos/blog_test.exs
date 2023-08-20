@@ -440,4 +440,94 @@ defmodule LiveViewTodos.BlogTest do
     tag
   end
 
+
+  alias LiveViewTodos.Blog.Comment
+
+  @valid_attrs %{content: "some content"}
+  @update_attrs %{content: "some updated content"}
+  @invalid_attrs %{content: nil}
+
+  describe "#paginate_comments/1" do
+    test "returns paginated list of comments" do
+      for _ <- 1..20 do
+        comment_fixture()
+      end
+
+      {:ok, %{comments: comments} = page} = Blog.paginate_comments(%{})
+
+      assert length(comments) == 15
+      assert page.page_number == 1
+      assert page.page_size == 15
+      assert page.total_pages == 2
+      assert page.total_entries == 20
+      assert page.distance == 5
+      assert page.sort_field == "inserted_at"
+      assert page.sort_direction == "desc"
+    end
+  end
+
+  describe "#list_comments/0" do
+    test "returns all comments" do
+      comment = comment_fixture()
+      assert Blog.list_comments() == [comment]
+    end
+  end
+
+  describe "#get_comment!/1" do
+    test "returns the comment with given id" do
+      comment = comment_fixture()
+      assert Blog.get_comment!(comment.id) == comment
+    end
+  end
+
+  describe "#create_comment/1" do
+    test "with valid data creates a comment" do
+      assert {:ok, %Comment{} = comment} = Blog.create_comment(@valid_attrs)
+      assert comment.content == "some content"
+    end
+
+    test "with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Blog.create_comment(@invalid_attrs)
+    end
+  end
+
+  describe "#update_comment/2" do
+    test "with valid data updates the comment" do
+      comment = comment_fixture()
+      assert {:ok, comment} = Blog.update_comment(comment, @update_attrs)
+      assert %Comment{} = comment
+      assert comment.content == "some updated content"
+    end
+
+    test "with invalid data returns error changeset" do
+      comment = comment_fixture()
+      assert {:error, %Ecto.Changeset{}} = Blog.update_comment(comment, @invalid_attrs)
+      assert comment == Blog.get_comment!(comment.id)
+    end
+  end
+
+  describe "#delete_comment/1" do
+    test "deletes the comment" do
+      comment = comment_fixture()
+      assert {:ok, %Comment{}} = Blog.delete_comment(comment)
+      assert_raise Ecto.NoResultsError, fn -> Blog.get_comment!(comment.id) end
+    end
+  end
+
+  describe "#change_comment/1" do
+    test "returns a comment changeset" do
+      comment = comment_fixture()
+      assert %Ecto.Changeset{} = Blog.change_comment(comment)
+    end
+  end
+
+  def comment_fixture(attrs \\ %{}) do
+    {:ok, comment} =
+      attrs
+      |> Enum.into(@valid_attrs)
+      |> Blog.create_comment()
+
+    comment
+  end
+
 end

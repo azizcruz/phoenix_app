@@ -12,10 +12,9 @@ defmodule LiveViewTodos.Application do
       LiveViewTodosWeb.Telemetry,
       # Start the Ecto repository
       LiveViewTodos.Repo,
-      # Start the PubSub system
-      {Phoenix.PubSub, name: LiveViewTodos.PubSub},
       # Start Finch
       {Finch, name: LiveViewTodos.Finch},
+      {Phoenix.PubSub, name: LiveViewTodos.PubSub, adapter: Phoenix.PubSub.PG2},
       # Start the Endpoint (http/https)
       LiveViewTodosWeb.Endpoint
       # Start a worker by calling: LiveViewTodos.Worker.start_link(arg)
